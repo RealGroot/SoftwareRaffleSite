@@ -16,16 +16,18 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes(['register' => false]);
 
-Route::get('/', function () {
-	return view('welcome');
+Route::middleware('auth')->group(function () {
+	Route::get('/', function () {
+		return view('welcome');
+	});
+
+	Route::get('/home', 'HomeController@index')->name('home');
+	Route::get('/profile', 'ProfileController@show')->name('profile');
+
+	Route::middleware(['role:admin'])->group(function () {
+		Route::resource('users', 'UserController')->name('index', 'users');
+		Route::resource('keys', 'SoftwareKeyController')->name('index', 'keys')->except('show');
+	});
+
+	Route::resource('keys', 'SoftwareKeyController')->only('show');
 });
-
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/profile', 'ProfileController@show')->name('profile');
-
-Route::middleware(['role:admin'])->group(function () {
-	Route::resource('users', 'UserController')->name('index', 'users');
-	Route::resource('keys', 'SoftwareKeyController')->name('index', 'keys')->except('show');
-});
-
-Route::resource('keys', 'SoftwareKeyController')->only('show');
