@@ -35,7 +35,7 @@ class SoftwareKey extends Model
 	 */
 	public function child_keys()
 	{
-		return $this->hasMany('App\SoftwareKey');
+		return $this->hasMany(SoftwareKey::class);
 	}
 
 	/**
@@ -43,6 +43,6 @@ class SoftwareKey extends Model
 	 */
 	public function user()
 	{
-		return $this->belongsTo('App\User', 'owner_id');
+		return $this->belongsTo(User::class, 'owner_id');
 	}
 }

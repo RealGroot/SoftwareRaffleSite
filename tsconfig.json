@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"allowJs": true,
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"charset": "utf-8",
+		"strict": true,
+		"esModuleInterop": true,
+		"jsx": "react",
+		"target": "es5"
+	},
+	"include": [
+		"resources/js/**/*"
+	]
+}

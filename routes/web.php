@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::view('/{path?}', 'app')->where(['path' => '.*']);//->middleware('auth');
+
+/*
 Auth::routes(['register' => false]);
 
 Route::middleware('auth')->group(function () {
@@ -25,9 +28,10 @@ Route::middleware('auth')->group(function () {
 	Route::get('/profile', 'ProfileController@show')->name('profile');
 
 	Route::middleware(['role:admin'])->group(function () {
-		Route::resource('users', 'UserController')->name('index', 'users');
-		Route::resource('keys', 'SoftwareKeyController')->name('index', 'keys')->except('show');
+		Route::resource('users', 'UserController')->name('index', 'users')->except('show');
+		Route::resource('keys', 'SoftwareKeyController')->except('index');
 	});
 
-	Route::resource('keys', 'SoftwareKeyController')->only('show');
+	Route::resource('keys', 'SoftwareKeyController')->only('index')->name('index', 'keys');
 });
+*/

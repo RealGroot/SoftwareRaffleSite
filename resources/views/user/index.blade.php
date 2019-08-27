@@ -21,51 +21,65 @@
 		}
 
 		.resource-index li {
-			border: 2px solid gray;
 			margin-top: 10px;
-			padding: 5px;
+		}
+
+		.resource-index table {
+			width: 100%;
+			height: 100%;
+		}
+
+		.btn {
+			border: 1px solid gray;
+			background-color: lightgray;
+			padding: 5px 10px;
+			border-radius: 0;
+			margin-top: 5px;
+		}
+
+		.column-min {
+			width: 1%;
+			white-space: nowrap;
 		}
 	</style>
 
 	<div class="resource-index-container">
 		<div class="resource-index">
-			<div>
-				<form action="/users/create">
-					<input type="submit" value="Create New User"/>
-				</form>
-			</div>
-			<div style="margin-top: 20px;">
-				<form action="/users">
-					<label><input type="text" name="search"/></label>
-					<input type="submit" value="Search"/>
-				</form>
-			</div>
+			<form action="{{ url("/users/create") }}">
+				<input type="submit" value="Create New User"/>
+			</form>
+			<form style="margin-top: 20px" action="{{ route('users') }}">
+				@csrf
+				<label><input type="text" name="search"/></label>
+				<input type="submit" value="Search"/>
+			</form>
 			@if ($users->isNotEmpty())
 				<ul>
 					@foreach ($users as $user)
 						<li class="resource-item">
-							<table>
-								<tr>
-									<td>Username:</td>
-									<td>{{ $user->name }}</td>
-								</tr>
-								<tr>
-									<td>Role:</td>
-									<td>{{ $user->roles()->limit(1)->get(['display_name'])[0]['display_name'] }}</td>
-								</tr>
-								<tr>
-									<td colspan="2">
-										<div style="display: flex; justify-content: center;">
-											<form action="/users/{!! urlencode($user->id) !!}/show" style="margin-right: 10px;">
-												<input type="submit" value="Show"/>
-											</form>
-											<form action="/users/{!! urlencode($user->id) !!}/edit">
-												<input type="submit" value="Edit"/>
-											</form>
-										</div>
-									</td>
-								</tr>
-							</table>
+							<div style="justify-content: center; display: flex; flex-direction: column; border: 2px solid gray; padding: 5px;">
+								<table>
+									<colgroup>
+										<col class="column-min">
+										<col>
+									</colgroup>
+									<tr>
+										<td>Username:</td>
+										<td>{{ $user->name }}</td>
+									</tr>
+									<tr>
+										<td>E-Mail:</td>
+										<td>{{ $user->email }}</td>
+									</tr>
+									<tr>
+										<td>Role:</td>
+										<td>{{ $user->roles()->limit(1)->get(['display_name'])[0]['display_name'] }}</td>
+									</tr>
+								</table>
+								<div style="justify-content: center; display: flex; flex-direction: row; border-top: 2px solid gray">
+									<a class="btn" href="{{ url("/users/{$user->id}/edit") }}">Edit</a>
+								</div>
+							</div>
 						</li>
 					@endforeach
 				</ul>

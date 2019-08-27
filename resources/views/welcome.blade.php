@@ -76,11 +76,12 @@
 		</div>
 		<div class="links">
 			@role('admin')
-				<a href="{{ route('users') }}">User</a>
+				<a href="{{ route('users') }}">Benutzer</a>
 			@endrole
 			<a href="{{ route('keys') }}">Software Schlüssel</a>
 		</div>
 	</div>
+	<div id="app"></div>
 </div>
 </body>
 </html>

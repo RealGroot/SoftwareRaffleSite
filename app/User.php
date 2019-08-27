@@ -43,6 +43,6 @@ class User extends Authenticatable
 	 */
 	public function software_keys()
 	{
-		return $this->hasMany('App\SoftwareKey');
+		return $this->hasMany(SoftwareKey::class);
 	}
 }
