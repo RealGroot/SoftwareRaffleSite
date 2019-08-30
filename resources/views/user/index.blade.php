@@ -32,6 +32,10 @@
 							<td>{{ $user->email }}</td>
 						</tr>
 						<tr>
+							<th scope="row">Role</th>
+							<td>{{ $user->role_name }}</td>
+						</tr>
+						<tr>
 							<td colspan="2"><a class="btn btn-primary" href="{{ url("users/{$user->id}") }}">Edit</a></td>
 						</tr>
 					</table>
