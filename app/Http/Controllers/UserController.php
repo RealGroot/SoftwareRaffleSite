@@ -6,6 +6,7 @@ use App\Role;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -105,7 +106,7 @@ class UserController extends Controller
 	 */
 	public function edit(User $user)
 	{
-		return view('user.edit');
+		return view('user.edit', ['roles' => Role::all(), 'user' => $user]);
 	}
 
 	/**
