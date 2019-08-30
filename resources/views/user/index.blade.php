@@ -1,93 +1,54 @@
 @extends('layouts.app')
 
 @section('content')
-	<style>
-		.resource-index-container {
-			display: flex;
-			justify-content: center;
-			flex-direction: row;
-		}
-
-		.resource-index {
-			display: flex;
-			justify-content: center;
-			flex-direction: column;
-			align-items: center;
-		}
-
-		.resource-index ul {
-			list-style-type: none;
-			padding: 0;
-		}
-
-		.resource-index li {
-			margin-top: 10px;
-		}
-
-		.resource-index table {
-			width: 100%;
-			height: 100%;
-		}
-
-		.btn {
-			border: 1px solid gray;
-			background-color: lightgray;
-			padding: 5px 10px;
-			border-radius: 0;
-			margin-top: 5px;
-		}
-
-		.column-min {
-			width: 1%;
-			white-space: nowrap;
-		}
-	</style>
-
-	<div class="resource-index-container">
-		<div class="resource-index">
-			<form action="{{ url("/users/create") }}">
-				<input type="submit" value="Create New User"/>
-			</form>
-			<form style="margin-top: 20px" action="{{ route('users') }}">
-				@csrf
-				<label><input type="text" name="search"/></label>
-				<input type="submit" value="Search"/>
-			</form>
-			@if ($users->isNotEmpty())
-				<ul>
-					@foreach ($users as $user)
-						<li class="resource-item">
-							<div style="justify-content: center; display: flex; flex-direction: column; border: 2px solid gray; padding: 5px;">
-								<table>
-									<colgroup>
-										<col class="column-min">
-										<col>
-									</colgroup>
-									<tr>
-										<td>Username:</td>
-										<td>{{ $user->name }}</td>
-									</tr>
-									<tr>
-										<td>E-Mail:</td>
-										<td>{{ $user->email }}</td>
-									</tr>
-									<tr>
-										<td>Role:</td>
-										<td>{{ $user->roles()->limit(1)->get(['display_name'])[0]['display_name'] }}</td>
-									</tr>
-								</table>
-								<div style="justify-content: center; display: flex; flex-direction: row; border-top: 2px solid gray">
-									<a class="btn" href="{{ url("/users/{$user->id}/edit") }}">Edit</a>
-								</div>
-							</div>
-						</li>
-					@endforeach
-				</ul>
-			@elseif ($searched)
-				<p>No user entries found.</p>
-			@else
-				<p>The are no users registered.</p>
-			@endif
+	<div class="container">
+		<div class="row justify-content-center">
+			<a class="btn btn-primary" href="{{ route('user.create') }}">Create New User</a>
 		</div>
+		<div class="row justify-content-center mt-md-5 mb-md-5">
+			<form method="GET" action="{{ url()->current() }}">
+				<div class="input-group">
+					<input class="form-control" type="text" name="search" value="{{ $search }}"/>
+					<div class="input-group-append">
+						<input class="btn btn-primary" type="submit" value="Search">
+					</div>
+				</div>
+			</form>
+		</div>
+		@if ($userPage->isNotEmpty())
+			@foreach ($userPage as $user)
+				<div class="row justify-content-center mt-md-2">
+					<table class="table">
+						<colgroup>
+							<col class="w-auto"/>
+							<col class="w-100"/>
+						</colgroup>
+						<tr>
+							<th scope="row">Username</th>
+							<td>{{ $user->name }}</td>
+						</tr>
+						<tr>
+							<th scope="row">E-Mail</th>
+							<td>{{ $user->email }}</td>
+						</tr>
+						<tr>
+							<td colspan="2"><a class="btn btn-primary" href="{{ url("users/{$user->id}") }}">Edit</a></td>
+						</tr>
+					</table>
+				</div>
+			@endforeach
+		@elseif ($searched)
+			<div class="row justify-content-center">
+				<div class="alert alert-info" role="alert">
+					No user entries found.
+				</div>
+			</div>
+		@else
+			<div class="row justify-content-center">
+				<div class="alert alert-info" role="alert">
+					The are no users registered.
+				</div>
+			</div>
+		@endif
 	</div>
 @endsection

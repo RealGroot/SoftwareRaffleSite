@@ -20,7 +20,7 @@ class UserController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$userQuery = User::query();
+		$userQuery = DB::table('users');
 
 		$search = $request->query('search', null);
 		if (!is_string($search) || empty($search)) {
@@ -28,7 +28,7 @@ class UserController extends Controller
 		}
 
 		if (isset($search)) {
-			$userQuery = $userQuery->where('name', 'like', '%' . $search . '%');
+			$userQuery = $userQuery->where('users.name', 'like', '%' . $search . '%');
 		}
 
 		$page = $request->query('page', 1);
@@ -39,15 +39,23 @@ class UserController extends Controller
 			$page = 1;
 		}
 
-		$users = $userQuery
+		$userPage = $userQuery
+			->select(['users.id', 'users.name', 'users.email', 'roles.display_name as role_name'])
+			->join('role_user', 'users.id', '=', 'role_user.user_id')
+			->join('roles', 'role_user.role_id', '=', 'roles.id')
+			->orderBy('role_name')
 			->orderBy('name')
-			->paginate(10, ['id', 'name'], 'page', $page);
+			->paginate(10, null, null, $page);
 
-		if (isset($search)) {
-			$users = $users->appends(['search' => $search]);
+		if (!empty($search)) {
+			$userPage = $userPage->appends(['search' => $search]);
 		}
 
-		return view('user.index', ['users' => $users, 'searched' => isset($search)]);
+		return view('user.index', [
+			'userPage' => $userPage,
+			'searched' => !empty($search),
+			'search' => !empty($search) ? $search : '',
+		]);
 	}
 
 	/**
