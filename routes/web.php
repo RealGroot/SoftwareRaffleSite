@@ -25,8 +25,11 @@ Route::middleware('auth')->group(function () {
 	Route::get('/profile', 'ProfileController@show')->name('profile');
 
 	Route::middleware(['role:admin'])->group(function () {
-		Route::resource('users', 'UserController')->name('index', 'users')->except('show');
-		Route::resource('keys', 'SoftwareKeyController')->except('index');
+		Route::resource('users', 'UserController')->except('show')
+			->names(['index' => 'users', 'create' => 'user.create', 'store' => 'user.store',]);
+
+		Route::resource('keys', 'SoftwareKeyController')->except('index')
+			->names(['create' => 'key.create', 'store' => 'key.store']);
 	});
 
 	Route::resource('keys', 'SoftwareKeyController')->only('index')->name('index', 'keys');
