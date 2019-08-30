@@ -36,7 +36,18 @@
 							<td>{{ $user->role_name }}</td>
 						</tr>
 						<tr>
-							<td colspan="2"><a class="btn btn-primary" href="{{ url("users/{$user->id}/edit") }}">Edit</a></td>
+							<td colspan="2">
+								<div class="container">
+									<div class="row">
+										<form method="POST" action="{{ url("users/{$user->id}") }}" onsubmit="return confirm('Are you sure you want to delete the user \'{{ $user->name }}\'?');">
+											@method('DELETE')
+											@csrf
+											<input class="btn btn-danger" type="submit" value="Delete"/>
+										</form>
+										<a class="btn btn-primary ml-md-1" href="{{ url("users/{$user->id}/edit") }}">Edit</a>
+									</div>
+								</div>
+							</td>
 						</tr>
 					</table>
 				</div>

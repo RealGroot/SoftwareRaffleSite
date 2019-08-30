@@ -139,6 +139,7 @@ class UserController extends Controller
 	 */
 	public function destroy(User $user)
 	{
-		return view('user.destroy');
+		$user->delete();
+		return redirect()->route('users');
 	}
 }
