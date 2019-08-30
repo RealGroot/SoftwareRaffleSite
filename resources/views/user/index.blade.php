@@ -15,8 +15,25 @@
 				</div>
 			</form>
 		</div>
-		@if ($userPage->isNotEmpty())
-			@foreach ($userPage as $user)
+		@if ($paginator->hasPages())
+		<div class="row justify-content-center">
+			<ul class="pagination">
+				<li class="page-item @if ($paginator->previousPageUrl() === null) disabled @endif">
+					<a class="page-link" href="{{ $paginator->previousPageUrl() }}">Previous</a>
+				</li>
+				@foreach ($pages as $pageIndex => $pageUrl)
+					<li class="page-item @if ($pageIndex === $paginator->currentPage()) active @endif">
+						<a class="page-link" href="{{ $pageUrl }}">{{ $pageIndex }}</a>
+					</li>
+				@endforeach
+				<li class="page-item @if ($paginator->nextPageUrl() === null) disabled @endif">
+					<a class="page-link" href="{{ $paginator->nextPageUrl() }}">Next</a>
+				</li>
+			</ul>
+		</div>
+		@endif
+		@if ($paginator->isNotEmpty())
+			@foreach ($paginator as $user)
 				<div class="row justify-content-center mt-md-2">
 					<table class="table">
 						<colgroup>

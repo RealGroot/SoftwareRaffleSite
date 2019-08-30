@@ -28,18 +28,15 @@ class UserController extends Controller
 		}
 
 		if (isset($search)) {
-			$userQuery = $userQuery->where('users.name', 'like', '%' . $search . '%');
+			$userQuery->where('users.name', 'like', '%' . $search . '%');
 		}
 
 		$page = $request->query('page', 1);
-		if (!is_int($page) && is_string($page)) {
-			$page = intval($page);
-		}
-		if (is_int($page) && $page < 1 || !is_int($page)) {
-			$page = 1;
+		if (!is_int($page)) {
+			abort(404, 'Page not found');
 		}
 
-		$userPage = $userQuery
+		$paginator = $userQuery
 			->select(['users.id', 'users.name', 'users.email', 'roles.display_name as role_name'])
 			->join('role_user', 'users.id', '=', 'role_user.user_id')
 			->join('roles', 'role_user.role_id', '=', 'roles.id')
@@ -47,12 +44,26 @@ class UserController extends Controller
 			->orderBy('name')
 			->paginate(10, null, null, $page);
 
-		if (!empty($search)) {
-			$userPage = $userPage->appends(['search' => $search]);
+		if ($paginator->currentPage() < 1 || $paginator->currentPage() > $paginator->lastPage()) {
+			abort(404, 'Page not found');
 		}
 
+		$paginator->appends(['page' => $page]);
+
+		if (!empty($search)) {
+			$paginator->appends(['search' => $search]);
+		}
+
+		$paginator->onEachSide(2);
+
+		$pages = $paginator->getUrlRange(
+			max(1, $paginator->currentPage() - $paginator->onEachSide),
+			min($paginator->lastPage(), $paginator->currentPage() + $paginator->onEachSide)
+		);
+
 		return view('user.index', [
-			'userPage' => $userPage,
+			'paginator' => $paginator,
+			'pages' => $pages,
 			'searched' => !empty($search),
 			'search' => !empty($search) ? $search : '',
 		]);
