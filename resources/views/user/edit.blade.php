@@ -31,7 +31,7 @@
 			</div>
 			<div class="form-group">
 				<a class="btn btn-danger" href="{{ route('users') }}">Cancel</a>
-				<input class="btn btn-primary" type="submit" value="Submit"/>
+				<input class="btn btn-primary" type="submit" value="Save"/>
 			</div>
 		</form>
 	</div>
