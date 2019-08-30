@@ -114,7 +114,21 @@ class UserController extends Controller
 	 */
 	public function update(Request $request, User $user)
 	{
-		return view('user.update');
+		$validatedData = $request->validate([
+			'username' => ['required', 'string', 'max:255'],
+			'email' => ['required', 'string', 'email', 'max:100', Rule::unique('users')->ignore($user->id)],
+			'role' => ['required', 'string', Rule::in(Role::all()->map(function ($role) { return $role->name; }))],
+		]);
+
+		$user->update([
+			'name' => $validatedData['username'],
+			'email' => $validatedData['email'],
+		]);
+
+		$user->detachRoles($user->roles()->get());
+		$user->attachRole(Role::query()->where('name', '=', $validatedData['role'])->first());
+
+		return redirect()->route('users');
 	}
 
 	/**
