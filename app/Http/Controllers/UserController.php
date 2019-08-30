@@ -65,7 +65,7 @@ class UserController extends Controller
 	 */
 	public function create()
 	{
-		return view('user.create');
+		return view('user.create', ['roles' => Role::all(['name', 'display_name'])]);
 	}
 
 	/**
@@ -80,30 +80,18 @@ class UserController extends Controller
 			'username' => ['required', 'string', 'max:255'],
 			'email' => ['required', 'string', 'email', 'max:100', 'unique:users,email'],
 			'password' => ['required', 'string', 'confirmed'],
-			'role' => ['required', 'string', Rule::in(Role::all('name')->map(function ($role) {
-				return $role->name;
-			}))],
+			'role' => ['required', 'string', Rule::in(Role::all()->map(function ($role) { return $role->name; }))],
 		]);
 
-		$user = new User;
-		$user->name = $validatedData['username'];
-		$user->email = $validatedData['email'];
-		$user->password = Hash::make($validatedData['password']);
+		$user = new User([
+			'name' => $validatedData['username'],
+			'email' => $validatedData['email'],
+			'password' => Hash::make($validatedData['password']),
+		]);
 		$user->save();
 		$user->attachRole(Role::query()->where('name', '=', $validatedData['role'])->first());
 
 		return redirect('/users');
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param User $user
-	 * @return Response
-	 */
-	public function show(User $user)
-	{
-		return view('user.show');
 	}
 
 	/**
