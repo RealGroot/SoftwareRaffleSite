@@ -36,7 +36,7 @@
 							<td>{{ $user->role_name }}</td>
 						</tr>
 						<tr>
-							<td colspan="2"><a class="btn btn-primary" href="{{ url("users/{$user->id}") }}">Edit</a></td>
+							<td colspan="2"><a class="btn btn-primary" href="{{ url("users/{$user->id}/edit") }}">Edit</a></td>
 						</tr>
 					</table>
 				</div>
