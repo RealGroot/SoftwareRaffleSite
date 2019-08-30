@@ -91,7 +91,7 @@ class UserController extends Controller
 		$user->save();
 		$user->attachRole(Role::query()->where('name', '=', $validatedData['role'])->first());
 
-		return redirect('/users');
+		return redirect()->route('users');
 	}
 
 	/**
