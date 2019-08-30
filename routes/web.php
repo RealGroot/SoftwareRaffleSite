@@ -14,9 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/{path?}', 'app')->where(['path' => '.*']);//->middleware('auth');
-
-/*
 Auth::routes(['register' => false]);
 
 Route::middleware('auth')->group(function () {
@@ -34,4 +31,3 @@ Route::middleware('auth')->group(function () {
 
 	Route::resource('keys', 'SoftwareKeyController')->only('index')->name('index', 'keys');
 });
-*/
