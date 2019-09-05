@@ -13,13 +13,14 @@ class SoftwareKey extends Model
 	 */
 	protected $table = 'software_keys';
 
-	/**
-	 * The model's default values for attributes.
-	 *
-	 * @var array
-	 */
-	protected $attributes = [
-		'raffled' => false,
+	protected $fillable = [
+		'title',
+		'key',
+		'platform_id',
+		'shop_link',
+		'back_img_link',
+		'instruction_link',
+		'parent_id',
 	];
 
 	/**
@@ -27,7 +28,7 @@ class SoftwareKey extends Model
 	 */
 	public function parent_key()
 	{
-		return $this->belongsTo('App\SoftwareKey', 'parent_id');
+		return $this->belongsTo(SoftwareKey::class, 'parent_id');
 	}
 
 	/**
@@ -35,7 +36,7 @@ class SoftwareKey extends Model
 	 */
 	public function child_keys()
 	{
-		return $this->hasMany(SoftwareKey::class);
+		return $this->hasMany(SoftwareKey::class, 'parent_id');
 	}
 
 	/**
@@ -44,5 +45,13 @@ class SoftwareKey extends Model
 	public function user()
 	{
 		return $this->belongsTo(User::class, 'owner_id');
+	}
+
+	/**
+	 * Gets the platform this software key exists for.
+	 */
+	public function platform()
+	{
+		return $this->hasOne(Platform::class, 'id', 'platform_id');
 	}
 }
