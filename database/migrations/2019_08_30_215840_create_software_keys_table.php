@@ -21,10 +21,10 @@ class CreateSoftwareKeysTable extends Migration
             $table->timestamps();
             $table->string('title');
             $table->string('key', 100)->unique();
-            $table->enum('platform', ['pc', 'extra', 'steam', 'uplay', 'battle-net']);
-            $table->string('shop_link');
-            $table->string('back_img_link');
-            $table->string('instruction_link')->nullable();
+            $table->unsignedTinyInteger('platform_id')->nullable()->index();
+            $table->text('shop_link')->nullable();
+            $table->text('back_img_link')->nullable();
+            $table->text('instruction_link')->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->unsignedInteger('user_id')->nullable();
             $table->boolean('raffled')->default(false);
@@ -40,6 +40,12 @@ class CreateSoftwareKeysTable extends Migration
 			$table->foreign('user_id')
 				->references('id')
 				->on('users')
+				->onUpdate('cascade')
+				->onDelete('set null');
+
+			$table->foreign('platform_id')
+				->references('id')
+				->on('platforms')
 				->onUpdate('cascade')
 				->onDelete('set null');
 		});
