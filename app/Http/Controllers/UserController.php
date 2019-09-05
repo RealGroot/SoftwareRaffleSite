@@ -27,13 +27,8 @@ class UserController extends Controller
 			$search = null;
 		}
 
-		if (isset($search)) {
+		if (!empty($search)) {
 			$userQuery->where('users.name', 'like', '%' . $search . '%');
-		}
-
-		$page = $request->query('page', 1);
-		if (!is_int($page)) {
-			abort(404, 'Page not found');
 		}
 
 		$paginator = $userQuery
@@ -42,28 +37,19 @@ class UserController extends Controller
 			->join('roles', 'role_user.role_id', '=', 'roles.id')
 			->orderBy('role_name')
 			->orderBy('name')
-			->paginate(10, null, null, $page);
+			->paginate(10)
+			->onEachSide(2);
 
 		if ($paginator->currentPage() < 1 || $paginator->currentPage() > $paginator->lastPage()) {
-			abort(404, 'Page not found');
+			abort(404);
 		}
-
-		$paginator->appends(['page' => $page]);
 
 		if (!empty($search)) {
 			$paginator->appends(['search' => $search]);
 		}
 
-		$paginator->onEachSide(2);
-
-		$pages = $paginator->getUrlRange(
-			max(1, $paginator->currentPage() - $paginator->onEachSide),
-			min($paginator->lastPage(), $paginator->currentPage() + $paginator->onEachSide)
-		);
-
 		return view('user.index', [
 			'paginator' => $paginator,
-			'pages' => $pages,
 			'searched' => !empty($search),
 			'search' => !empty($search) ? $search : '',
 		]);
