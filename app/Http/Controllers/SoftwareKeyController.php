@@ -57,7 +57,7 @@ class SoftwareKeyController extends Controller
 	 */
 	public function create()
 	{
-		return view('software.create');
+		return view('software.create', ['platforms' => Platform::all()]);
 	}
 
 	/**
