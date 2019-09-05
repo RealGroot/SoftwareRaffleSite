@@ -68,7 +68,21 @@ class SoftwareKeyController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		return view('software.store');
+		$validatedData = $request->validate([
+			'title' => ['required', 'string', 'max:255'],
+			'key' => ['required', 'string', 'max:100', 'unique:software_keys,key'],
+			'platform_name' => ['required', 'string', Rule::in(Platform::all()->map(function ($platform) {
+				return $platform->name;
+			}))],
+			'shop_link' => ['nullable', 'url'],
+			'back_img_link' => ['nullable', 'url'],
+			'instruction_link' => ['nullable', 'url'],
+			'parent_id' => ['nullable', 'integer', 'min:1', 'exists:software_keys,id'],
+		]);
+
+		(new SoftwareKey($validatedData))->save();
+
+		return redirect()->route('keys');
 	}
 
 	/**
