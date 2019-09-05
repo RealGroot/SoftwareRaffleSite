@@ -5,10 +5,10 @@
 		<div class="row justify-content-center">
 			<a class="btn btn-primary" href="{{ route('user.create') }}">Create New User</a>
 		</div>
-		<div class="row justify-content-center mt-md-5 mb-md-5">
+		<div class="row justify-content-center mt-5 mb-5">
 			<form method="GET" action="{{ url()->current() }}">
 				<div class="input-group">
-					<input class="form-control" type="text" name="search" value="{{ $search }}"/>
+					<input class="form-control" type="text" name="search" value="{{ $search }}" required/>
 					<div class="input-group-append">
 						<input class="btn btn-primary" type="submit" value="Search">
 					</div>
@@ -16,25 +16,11 @@
 			</form>
 		</div>
 		@if ($paginator->hasPages())
-		<div class="row justify-content-center">
-			<ul class="pagination">
-				<li class="page-item @if ($paginator->previousPageUrl() === null) disabled @endif">
-					<a class="page-link" href="{{ $paginator->previousPageUrl() }}">Previous</a>
-				</li>
-				@foreach ($pages as $pageIndex => $pageUrl)
-					<li class="page-item @if ($pageIndex === $paginator->currentPage()) active @endif">
-						<a class="page-link" href="{{ $pageUrl }}">{{ $pageIndex }}</a>
-					</li>
-				@endforeach
-				<li class="page-item @if ($paginator->nextPageUrl() === null) disabled @endif">
-					<a class="page-link" href="{{ $paginator->nextPageUrl() }}">Next</a>
-				</li>
-			</ul>
-		</div>
+			<div class="row justify-content-center mt-5">{{ $paginator->links() }}</div>
 		@endif
 		@if ($paginator->isNotEmpty())
 			@foreach ($paginator as $user)
-				<div class="row justify-content-center mt-md-2">
+				<div class="row justify-content-center mt-2">
 					<table class="table">
 						<colgroup>
 							<col class="w-auto"/>
@@ -81,6 +67,9 @@
 					The are no users registered.
 				</div>
 			</div>
+		@endif
+		@if ($paginator->hasPages())
+			<div class="row justify-content-center mt-5">{{ $paginator->links() }}</div>
 		@endif
 	</div>
 @endsection
