@@ -2,28 +2,52 @@
 
 namespace App\Http\Controllers;
 
+use App\Platform;
 use App\SoftwareKey;
+use Barryvdh\Debugbar\Facade;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 
 class SoftwareKeyController extends Controller
 {
 	/**
-	 * SoftwareKeyController constructor.
-	 */
-	public function __construct()
-	{
-		$this->middleware('auth');
-	}
-
-	/**
 	 * Display a listing of the resource.
 	 *
+	 * @param Request $request
 	 * @return Response
 	 */
-	public function index()
+	public function index(Request $request)
 	{
-		return view('software.index');
+		$search = $request->query('search', null);
+		if (!is_string($search) || empty($search)) {
+			$search = null;
+		}
+
+		$searchedIds = null;
+		if (!empty($search)) {
+			$searchedIds = SoftwareKey::query()->where('software_keys.title', 'like', '%' . $search . '%')->get();
+		}
+
+		$paginator = SoftwareKey::query()
+			->whereNull('parent_id')
+			->orderBy('title')
+			->paginate(15)
+			->onEachSide(2);
+
+		if ($paginator->currentPage() < 1 || $paginator->currentPage() > $paginator->lastPage()) {
+			abort(404);
+		}
+
+		if (!empty($search)) {
+			$paginator->appends('search', $search);
+		}
+
+		return view('software.index', [
+			'search' => $search,
+			'searched' => !empty($search),
+			'paginator' => $paginator,
+		]);
 	}
 
 	/**
