@@ -114,7 +114,7 @@ class UserController extends Controller
 		$validatedData = $request->validate([
 			'username' => ['required', 'string', 'max:255'],
 			'email' => ['required', 'string', 'email', 'max:100', Rule::unique('users')->ignore($user->id)],
-			'role' => ['required', 'string', Rule::in(Role::all()->map(function ($role) { return $role->name; }))],
+			'role' => ['required', 'string', 'exists:roles,name'],
 		]);
 
 		$user->update([
