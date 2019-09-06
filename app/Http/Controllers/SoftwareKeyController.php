@@ -24,13 +24,22 @@ class SoftwareKeyController extends Controller
 			$search = null;
 		}
 
-		$searchedIds = null;
+		$query = SoftwareKey::query();
+
 		if (!empty($search)) {
-			$searchedIds = SoftwareKey::query()->where('software_keys.title', 'like', '%' . $search . '%')->get();
+			$searchedIds = SoftwareKey::query()
+				->whereIn('id', SoftwareKey::query()
+					->whereNotNull('parent_id')
+					->where('title', 'like', "%{$search}%")
+					->distinct()->get('parent_id'))
+				->orWhereNull('parent_id')
+				->where('title', 'like', "%{$search}%")
+				->get('id');
+
+			$query->whereIn('id', $searchedIds);
 		}
 
-		$paginator = SoftwareKey::query()
-			->whereNull('parent_id')
+		$paginator = $query->whereNull('parent_id')
 			->orderBy('title')
 			->paginate(15)
 			->onEachSide(2);
