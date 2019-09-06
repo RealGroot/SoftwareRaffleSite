@@ -24,7 +24,8 @@
 					<div class="col-5" style="min-width: 300px; max-width: 500px">
 						<div class="card mt-5">
 							@if (!empty($key->back_img_link))
-								<img class="card-img-top" src="{{ $key->back_img_link }}" alt="Header Image">
+								<img class="card-img-top" src="{{ $key->back_img_link }}" alt="Software Image"
+									 style="max-height: 250px">
 							@endif
 							<div class="card-header align-middle position-relative">
 								@php $platform = $key->platform()->first(); @endphp
@@ -69,7 +70,7 @@
 											instructions</a>
 									@endif
 									@role('admin')
-										<a class="card-link" href="{{ url("/keys/{$key->id}/edit") }}">Edit Software Key</a>
+									<a class="card-link" href="{{ url("/keys/{$key->id}/edit") }}">Edit Software Key</a>
 									@endrole
 								</div>
 							@endif
