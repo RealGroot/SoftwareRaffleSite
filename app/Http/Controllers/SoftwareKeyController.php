@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Platform;
 use App\SoftwareKey;
-use Barryvdh\Debugbar\Facade;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
@@ -136,9 +136,11 @@ class SoftwareKeyController extends Controller
 	 *
 	 * @param SoftwareKey $key
 	 * @return Response
+	 * @throws Exception
 	 */
 	public function destroy(SoftwareKey $key)
 	{
-		return view('software.destroy');
+		$key->delete();
+		return redirect()->route('keys');
 	}
 }
