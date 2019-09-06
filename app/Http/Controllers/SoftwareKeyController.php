@@ -116,7 +116,19 @@ class SoftwareKeyController extends Controller
 	 */
 	public function update(Request $request, SoftwareKey $key)
 	{
-		return view('software.update');
+		$validatedData = $request->validate([
+			'title' => ['required', 'string', 'max:255'],
+			'key' => ['required', 'string', 'max:100', Rule::unique('software_keys')->ignore($key->id)],
+			'platform_name' => ['required', 'string', 'exists:platforms,name'],
+			'shop_link' => ['nullable', 'url'],
+			'back_img_link' => ['nullable', 'url'],
+			'instruction_link' => ['nullable', 'url'],
+			'parent_id' => ['nullable', 'integer', 'min:1', 'exists:software_keys,id'],
+		]);
+
+		$key->update($validatedData);
+
+		return redirect()->route('keys');
 	}
 
 	/**
