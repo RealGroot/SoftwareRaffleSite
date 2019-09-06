@@ -81,9 +81,7 @@ class SoftwareKeyController extends Controller
 		$validatedData = $request->validate([
 			'title' => ['required', 'string', 'max:255'],
 			'key' => ['required', 'string', 'max:100', 'unique:software_keys,key'],
-			'platform_name' => ['required', 'string', Rule::in(Platform::all()->map(function ($platform) {
-				return $platform->name;
-			}))],
+			'platform_name' => ['required', 'string', 'exists:platforms,name'],
 			'shop_link' => ['nullable', 'url'],
 			'back_img_link' => ['nullable', 'url'],
 			'instruction_link' => ['nullable', 'url'],
