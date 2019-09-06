@@ -2,10 +2,15 @@
 
 @section('content')
 	<div class="container-fluid">
-		<div class="row justify-content-center">
+		@role('admin')
+		<div class="row justify-content-center mb-5">
 			<a class="btn btn-primary" href="{{ route('key.create') }}">Create New Software Key</a>
 		</div>
-		<div class="row justify-content-center mt-5">
+		@endrole
+		<div class="row justify-content-center">
+			<form class="mr-3" method="GET" action="{{ url()->current() }}">
+				<input class="form-control btn btn-danger" type="submit" value="Clear">
+			</form>
 			<form method="GET" action="{{ url()->current() }}">
 				<div class="input-group">
 					<input class="form-control" type="text" name="search" value="{{ $search }}" required/>
@@ -33,10 +38,11 @@
 									<i class="{{ $platform->icon_name }} fa-2x ml-n2 position-absolute"
 									   style="top: 50%; transform: translate(0, -50%);"></i>
 								@elseif (!empty($platform->icon_url))
-									<img class="float-left" src="{{ $platform->icon_url }}"
-										 alt="{{ $platform->name }} icon">
+									<img class="ml-n2 position-absolute" src="{{ $platform->icon_url }}"
+										 alt="{{ $platform->name }} icon"
+										 style="width: 2em; height: 2em; top: 50%; transform: translate(0, -50%);">
 								@endif
-								<h5 class="mb-0 ml-4 font-weight-bold text-center align-middle">
+								<h5 class="mb-0 ml-4 mr-4 font-weight-bold text-center">
 									{{ $key->title }}@role('admin') ({{ $key->id }})@endrole
 								</h5>
 							</div>
@@ -79,15 +85,15 @@
 				@endforeach
 			</div>
 		@elseif ($searched)
-			<div class="row justify-content-center">
+			<div class="row justify-content-center mt-5">
 				<div class="alert alert-info" role="alert">
-					No software key entries found.
+					No software found with that name.
 				</div>
 			</div>
 		@else
-			<div class="row justify-content-center">
+			<div class="row justify-content-center mt-5">
 				<div class="alert alert-info" role="alert">
-					The are no software keys registered.
+					No software found.
 				</div>
 			</div>
 		@endif
