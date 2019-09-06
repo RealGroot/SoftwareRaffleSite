@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Platform;
 use App\SoftwareKey;
+use Barryvdh\Debugbar\Facade;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -89,6 +90,10 @@ class SoftwareKeyController extends Controller
 			'parent_id' => ['nullable', 'integer', 'min:1', 'exists:software_keys,id'],
 		]);
 
+		$validatedData['platform_id'] = Platform::query()
+			->where('name', '=', $validatedData['platform_name'])
+			->first()->id;
+
 		(new SoftwareKey($validatedData))->save();
 
 		return redirect()->route('keys');
@@ -134,6 +139,10 @@ class SoftwareKeyController extends Controller
 			'instruction_link' => ['nullable', 'url'],
 			'parent_id' => ['nullable', 'integer', 'min:1', 'exists:software_keys,id'],
 		]);
+
+		$validatedData['platform_id'] = Platform::query()
+			->where('name', '=', $validatedData['platform_name'])
+			->first()->id;
 
 		$key->update($validatedData);
 
