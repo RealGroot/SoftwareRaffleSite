@@ -41,6 +41,9 @@
 						</option>
 					@endforeach
 				</select>
+				@error('role')
+				<div class="invalid-feedback">{{ $message }}</div>
+				@enderror
 			</div>
 			<div class="form-group">
 				<a class="btn btn-danger" href="{{ route('users') }}">Cancel</a>
