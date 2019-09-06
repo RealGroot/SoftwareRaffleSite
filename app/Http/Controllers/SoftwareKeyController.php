@@ -104,7 +104,7 @@ class SoftwareKeyController extends Controller
 	 */
 	public function edit(SoftwareKey $key)
 	{
-		return view('software.edit');
+		return view('software.edit', ['key' => $key, 'platforms' => Platform::all()]);
 	}
 
 	/**
