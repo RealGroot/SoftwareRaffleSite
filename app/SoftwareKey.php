@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Watson\Rememberable\Rememberable;
 
 class SoftwareKey extends Model
 {
+	use Rememberable;
+
 	/**
 	 * The table associated with the model.
 	 *
@@ -22,6 +25,10 @@ class SoftwareKey extends Model
 		'instruction_link',
 		'parent_id',
 	];
+
+	public $rememberCacheTag = 'software_queries';
+
+	public $rememberFor = 60 * 60 * 24;
 
 	/**
 	 * Get the parent software key this key is associated with.

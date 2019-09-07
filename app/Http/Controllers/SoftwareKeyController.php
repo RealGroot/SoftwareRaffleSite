@@ -8,6 +8,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Zizaco\Entrust\EntrustFacade as Entrust;
 
@@ -103,6 +105,8 @@ class SoftwareKeyController extends Controller
 
 		(new SoftwareKey($validatedData))->save();
 
+		Cache::tags('software_queries')->flush();
+
 		return redirect()->route('keys');
 	}
 
@@ -153,6 +157,8 @@ class SoftwareKeyController extends Controller
 
 		$key->update($validatedData);
 
+		Cache::tags('software_queries')->flush();
+
 		return redirect()->route('keys');
 	}
 
@@ -166,6 +172,9 @@ class SoftwareKeyController extends Controller
 	public function destroy(SoftwareKey $key)
 	{
 		$key->delete();
+
+		Cache::tags('software_queries')->flush();
+
 		return redirect()->route('keys');
 	}
 }

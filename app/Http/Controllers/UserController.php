@@ -6,6 +6,7 @@ use App\Role;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -88,6 +89,8 @@ class UserController extends Controller
 		$user->save();
 		$user->attachRole(Role::query()->where('name', '=', $validatedData['role'])->first());
 
+		Cache::tags('user_queries')->flush();
+
 		return redirect()->route('users');
 	}
 
@@ -125,6 +128,8 @@ class UserController extends Controller
 		$user->detachRoles($user->roles()->get());
 		$user->attachRole(Role::query()->where('name', '=', $validatedData['role'])->first());
 
+		Cache::tags('user_queries')->flush();
+
 		return redirect()->route('users');
 	}
 
@@ -137,6 +142,9 @@ class UserController extends Controller
 	public function destroy(User $user)
 	{
 		$user->delete();
+
+		Cache::tags('user_queries')->flush();
+
 		return redirect()->route('users');
 	}
 }
