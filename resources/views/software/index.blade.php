@@ -64,7 +64,12 @@
 								<div class="card-body p-0 collapse border-bottom" id="collapse-dlc-{{ $key->id }}">
 									<ul class="list-group list-group-flush">
 										@foreach ($child_keys as $dlc)
-											<li class="list-group-item">{{ $dlc->title }}</li>
+											<li class="list-group-item">
+												{{ $dlc->title }}
+												@role('admin')
+													<a class="btn btn-primary float-right pl-2 pr-2 pt-1 pb-1" href="{{ url("/keys/{$dlc->id}/edit") }}">Edit</a>
+												@endrole
+											</li>
 										@endforeach
 									</ul>
 								</div>
