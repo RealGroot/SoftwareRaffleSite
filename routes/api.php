@@ -10,3 +10,7 @@
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+use Illuminate\Support\Facades\Route;
+
+Route::post('/vote/toggle', 'VoteController@toggle_vote');
