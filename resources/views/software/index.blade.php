@@ -76,7 +76,7 @@
 							@endif
 							<div class="card-body p-2">
 								@role('admin')
-									<p class="card-text text-center">Votes: {{ $voteCount ?? 0 }}</p>
+									<p class="card-text text-center">Votes: {{ $votes->get($key->id, 0) }}</p>
 								@else
 									<vote suffix="{{ $key->id }}" url="{{ url('/api/vote/toggle') }}" @if ($votes->contains($key->id)) checked @endif
 										  payload="{{ encrypt(['user' => Auth::user()->id, 'software' => $key->id]) }}"></vote>

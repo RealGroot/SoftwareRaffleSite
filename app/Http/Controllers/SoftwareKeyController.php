@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Platform;
+use App\RaffleVote;
 use App\SoftwareKey;
 use Exception;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -38,13 +40,19 @@ class SoftwareKeyController extends Controller
 					->distinct()->get('parent_id'))
 				->orWhereNull('parent_id')
 				->where('title', 'like', "%{$search}%")
-				->get('id');
+				->pluck('id');
 
 			$query->whereIn('id', $searchedIds);
 		}
 
 		if (!Entrust::hasRole('admin')) {
 			$query->where('raffled', '=', false);
+			$votes = Auth::user()->votes()->pluck('software_id');
+		} else {
+			$votes = DB::table((new RaffleVote)->getTable())
+				->select('software_id', DB::raw('count(*) as total'))
+				->groupBy('software_id')
+				->get()->mapWithKeys(function ($values) { return [$values->software_id => $values->total]; });
 		}
 
 		$paginator = $query->whereNull('parent_id')
@@ -67,7 +75,7 @@ class SoftwareKeyController extends Controller
 			'searched' => !empty($search),
 			'paginator' => $paginator,
 			'raffleDate' => $raffleDate,
-			'votes' => Auth::user()->votes()->pluck('software_id'),
+			'votes' => $votes,
 		]);
 	}
 
