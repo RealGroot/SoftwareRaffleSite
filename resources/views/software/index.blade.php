@@ -61,14 +61,12 @@
 										</button>
 									</h2>
 								</div>
-								<div class="collapse" id="collapse-dlc-{{ $key->id }}">
-									<div class="card-body p-0">
-										<ul class="list-group list-group-flush">
-											@foreach ($child_keys as $dlc)
-												<li class="list-group-item">{{ $dlc->title }}</li>
-											@endforeach
-										</ul>
-									</div>
+								<div class="card-body p-0 collapse border-bottom" id="collapse-dlc-{{ $key->id }}">
+									<ul class="list-group list-group-flush">
+										@foreach ($child_keys as $dlc)
+											<li class="list-group-item">{{ $dlc->title }}</li>
+										@endforeach
+									</ul>
 								</div>
 							@endif
 							<div class="card-body p-2">
@@ -85,11 +83,10 @@
 										<a class="card-link" href="{{ $key->shop_link }}">Visit the Shop Site</a>
 									@endif
 									@if (!empty($key->instruction_link))
-										<a class="card-link" href="{{ $key->instruction_link }}">Show installation
-											instructions</a>
+										<a class="card-link" href="{{ $key->instruction_link }}">Show installation instructions</a>
 									@endif
 									@role('admin')
-									<a class="card-link" href="{{ url("/keys/{$key->id}/edit") }}">Edit Software Key</a>
+										<a class="card-link" href="{{ url("/keys/{$key->id}/edit") }}">Edit Software Key</a>
 									@endrole
 								</div>
 							@endif
