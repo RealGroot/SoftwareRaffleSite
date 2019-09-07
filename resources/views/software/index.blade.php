@@ -20,8 +20,13 @@
 				</div>
 			</form>
 		</div>
+		<div class="row justify-content-center mt-3">
+			<div class="alert alert-info" role="alert">
+				Next raffle date: {{ $raffleDate }}.
+			</div>
+		</div>
 		@if ($paginator->hasPages())
-			<div class="row justify-content-center mt-5">{{ $paginator->links() }}</div>
+			<div class="row justify-content-center mt-3">{{ $paginator->links() }}</div>
 		@endif
 		@if ($paginator->isNotEmpty())
 			<div class="row justify-content-center">
@@ -66,6 +71,14 @@
 									</div>
 								</div>
 							@endif
+							<div class="card-body p-2">
+								@role('admin')
+									<p class="card-text text-center">Votes: {{ $voteCount ?? 0 }}</p>
+								@else
+									<vote suffix="{{ $key->id }}" url="{{ url('/api/vote/toggle') }}" @if ($votes->contains($key->id)) checked @endif
+										  payload="{{ encrypt(['user' => Auth::user()->id, 'software' => $key->id]) }}"></vote>
+								@endrole
+							</div>
 							@if (!empty($key->shop_link) || !empty($key->instruction_link) || Entrust::hasRole('admin'))
 								<div class="card-footer text-center">
 									@if (!empty($key->shop_link))

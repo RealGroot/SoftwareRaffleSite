@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Platform;
 use App\SoftwareKey;
-use Barryvdh\Debugbar\Facade;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Zizaco\Entrust\EntrustFacade as Entrust;
 
@@ -58,10 +58,14 @@ class SoftwareKeyController extends Controller
 			$paginator->appends('search', $search);
 		}
 
+		$raffleDate = date('j. F Y', mktime(0, 0, 0, date('n') + 1, 1, date('Y')));
+
 		return view('software.index', [
 			'search' => $search,
 			'searched' => !empty($search),
 			'paginator' => $paginator,
+			'raffleDate' => $raffleDate,
+			'votes' => Auth::user()->votes()->pluck('software_id'),
 		]);
 	}
 
