@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
+use Zizaco\Entrust\EntrustFacade as Entrust;
 
 class SoftwareKeyController extends Controller
 {
@@ -38,6 +39,10 @@ class SoftwareKeyController extends Controller
 				->get('id');
 
 			$query->whereIn('id', $searchedIds);
+		}
+
+		if (!Entrust::hasRole('admin')) {
+			$query->where('raffled', '=', false);
 		}
 
 		$paginator = $query->whereNull('parent_id')
