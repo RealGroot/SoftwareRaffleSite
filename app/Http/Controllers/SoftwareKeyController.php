@@ -34,10 +34,13 @@ class SoftwareKeyController extends Controller
 
 		if (!empty($search)) {
 			$searchedIds = SoftwareKey::query()
-				->whereIn('id', SoftwareKey::query()
-					->whereNotNull('parent_id')
-					->where('title', 'like', "%{$search}%")
-					->distinct()->get('parent_id'))
+				->whereIn('id', function (Builder $query) use ($search) {
+					$query->select('parent_id')
+						->from((new SoftwareKey)->getTable())
+						->whereNotNull('parent_id')
+						->where('title', 'like', "%{$search}%")
+						->distinct();
+				})
 				->orWhereNull('parent_id')
 				->where('title', 'like', "%{$search}%")
 				->pluck('id');
