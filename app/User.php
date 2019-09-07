@@ -45,4 +45,9 @@ class User extends Authenticatable
 	{
 		return $this->hasMany(SoftwareKey::class);
 	}
+
+	public function votes()
+	{
+		return $this->hasMany(RaffleVote::class, 'user_id', 'id');
+	}
 }

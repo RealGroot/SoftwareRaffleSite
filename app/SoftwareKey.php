@@ -54,4 +54,9 @@ class SoftwareKey extends Model
 	{
 		return $this->hasOne(Platform::class, 'id', 'platform_id');
 	}
+
+	public function user_votes()
+	{
+		return $this->hasMany(RaffleVote::class, 'software_id', 'id');
+	}
 }
